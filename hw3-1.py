@@ -58,9 +58,15 @@ def evaluate1(tokens):      #字句の並びを計算
     while index < len(tokens):
         if tokens[index]['type'] == 'NUMBER':
             if tokens[index - 1]['type'] == 'MUL':
-                tokens[index - 2] = tokens[index - 2] * tokens[index]
+                tokens[index - 2]['number'] = tokens[index - 2]['number'] * tokens[index]['number']
+                del tokens[index]
+                del tokens[index - 1]
+                index = index - 2
             elif tokens[index - 1]['type'] == 'DIV':
-                tokens[index - 2] = tokens[index - 2] / tokens[index]
+                tokens[index - 2]['number'] = tokens[index - 2]['number'] / tokens[index]['number']
+                del tokens[index]
+                del tokens[index - 1]
+                index = index - 2
             elif tokens[index - 1]['type'] == 'PLUS':
                 index += 1
             elif tokens[index - 1]['type'] == 'MINUS':
@@ -99,14 +105,15 @@ def test(line, expectedAnswer):
 def runTest():
     print "==== Test started! ===="
     test("1+2", 3)
-    #test("1.0+2.1-3", 0.1)
+    test("1.0+2.1-3", 0.1)
     test("2*3", 6) 
     test("1.0/5.0", 0.2)
-    test("3.0+4*2-1/5", 10.8)
-    #test("1", 1)
-    #test("1+2", 3)
-    #test("1.0+2", 3.0)
-    #test("1.0+2.0", 3.0)
+    test("4/2-1*5", -3)
+    test("3.0*1+4*2-1/5.0", 10.8)
+    test("1", 1)
+    test("1+2", 3)
+    test("1.0+2", 3.0)
+    test("1.0+2.0", 3.0)
     print "==== Test finished! ====\n"
 
 runTest()
